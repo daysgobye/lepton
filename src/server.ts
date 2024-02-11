@@ -1,12 +1,14 @@
-// const router = new Bun.FileSystemRouter({
-//     style: "nextjs",
-//     dir: "./pages",
-//     origin: "https://mydomain.com",
-//     assetPrefix: "_next/static/"
-// });
-// router.match("/");
-const server = () => {
+const router = new Bun.FileSystemRouter({
+    style: "nextjs",
+    dir: "./backend",
+    origin: "",
+    assetPrefix: ""
+});
+router.match("/");
+const server = (root: string) => {
     console.log("Starting server")
+    console.log(router.match(root));
+
 }
 
 
