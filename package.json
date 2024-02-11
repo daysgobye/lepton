@@ -10,6 +10,10 @@
   },
   "scripts": {
     "start": "bun run src/index.ts",
-    "build": "bun "
+    "build": "bun ",
+    "postinstall": "bun fetchLib.ts"
+  },
+  "dependencies": {
+    "webview-bun": "^1.0.1"
   }
 }
