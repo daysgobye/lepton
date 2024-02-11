@@ -1,4 +1,4 @@
-import type { Server } from "bun";
+import type { BunFile, Server } from "bun";
 import { SizeHint, Webview } from "webview-bun";
 import { firstTimeInstall } from "./utils/setup";
 
@@ -23,12 +23,18 @@ class Lepton {
     commands: Record<string, Command> = {};
     server: Server
     webview: Webview | undefined
-    constructor() {
+    constructor(path: string) {
+        const file = Bun.file(path)
+        // const resp = new Response(file);
+
         this.server = Bun.serve({
+            port: 3000,
+
             fetch(req, server) {
                 // upgrade the request to a WebSocket
                 if (server.upgrade(req)) {
-                    return; // do not return a Response
+                    const file = Bun.file(path)
+                    return new Response(file);
                 }
                 return new Response("Upgrade failed :(", { status: 500 });
             },
