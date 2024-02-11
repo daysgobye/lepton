@@ -11,7 +11,7 @@
   "scripts": {
     "start": "bun run src/index.ts",
     "build": "bun ",
-    "postinstall": "bun fetchLib.ts"
+    "postinstall": "bun node_modules/webview-bun/fetchLib.ts"
   },
   "dependencies": {
     "webview-bun": "^1.0.1"

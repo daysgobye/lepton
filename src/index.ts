@@ -1,8 +1,18 @@
 import type { Server } from "bun";
-import { Webview } from "webview-bun";
+import { SizeHint, Webview } from "webview-bun";
 import { firstTimeInstall } from "./utils/setup";
 
+export const enum SizeBehavior {
+    /** Width and height are default size */
+    NONE = SizeHint.NONE,
+    /** Width and height are minimum bounds */
+    MIN = SizeHint.MIN,
+    /** Width and height are maximum bounds */
+    MAX = SizeHint.MAX,
+    /** Window size can not be changed by a user */
+    FIXED = SizeHint.FIXED,
 
+}
 
 type Command = {
     command: string,
@@ -14,7 +24,6 @@ class Lepton {
     server: Server
     webview: Webview | undefined
     constructor() {
-        firstTimeInstall();
         this.server = Bun.serve({
             fetch(req, server) {
                 // upgrade the request to a WebSocket
@@ -43,11 +52,25 @@ class Lepton {
     send(command: string, data: any) {
         // this.server.ws.send(command, data)
     }
-    windowInit(width: number, height: number, title: string, path: string) {
+    windowInit(width: number, height: number, title: string, path: string, sizeBehavior: SizeBehavior = SizeBehavior.NONE) {
+        SizeHint.FIXED
 
         this.webview = new Webview();
 
-        this.webview.setHTML(path);
+        this.webview.navigate(path);
+        let size = {
+            width,
+            height,
+            hint: sizeBehavior as unknown as SizeHint
+        }
+
+        this.webview.size = size
+        this.webview.title = title;
+        this.webview.bind("press", (a, b, c) => {
+            console.log(a, b, c);
+        });
         this.webview.run();
+
     }
 }
+export default Lepton
